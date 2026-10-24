@@ -1,6 +1,7 @@
 package com.zerobear.ExpensesManagementApplication.service;
 
 import com.zerobear.ExpensesManagementApplication.dto.RegisterRequest;
+import com.zerobear.ExpensesManagementApplication.dto.UserRegisterEvent;
 import com.zerobear.ExpensesManagementApplication.entity.User;
 import com.zerobear.ExpensesManagementApplication.exception.UserAlreadyExistsException;
 import com.zerobear.ExpensesManagementApplication.exception.UserNotFoundException;
@@ -19,11 +20,13 @@ public class RegisterService {
     private final ValidationUtility validationUtility;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final UserEventProducerService userEventProducerService;
 
-    public RegisterService(ValidationUtility validationUtility, PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public RegisterService(ValidationUtility validationUtility, PasswordEncoder passwordEncoder, UserRepository userRepository, UserEventProducerService userEventProducerService) {
         this.validationUtility = validationUtility;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.userEventProducerService = userEventProducerService;
     }
     public Optional<User> getUserIfExists(RegisterRequest userRegisterRequest) throws UserNotFoundException{
         return  userRepository.findByName(userRegisterRequest.getName());
@@ -40,7 +43,9 @@ public class RegisterService {
         }
         String id = UUID.randomUUID().toString();
         User user=  new User(id,userRegisterRequest.getName(),hashedPassword,new HashSet<>());
-        userRepository.save(user);
+        User newUser=userRepository.save(user);
+        UserRegisterEvent userRegisterEvent= new UserRegisterEvent(userRegisterRequest.getName(), userRegisterRequest.getPassword(), userRegisterRequest.getPhoneNumber(),userRegisterRequest.getEmail());
+        userEventProducerService.produceUserRegisterEvent("user-register",userRegisterEvent);
         return true;
     }
 
