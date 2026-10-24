@@ -13,10 +13,10 @@
     </parent>
 
     <groupId>com.zerobear</groupId>
-    <artifactId>Personal-Expensis-Tracking-Application</artifactId>
+    <artifactId>AuthService</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>PersonalExpensisTrackingApplication</name>
-    <description>User Service for Personal Expenses Tracker</description>
+    <name>AuthService</name>
+    <description>Auth Service for Personal Expenses Tracker</description>
 
     <properties>
         <java.version>21</java.version>
