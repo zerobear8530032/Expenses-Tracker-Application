@@ -2,6 +2,7 @@ package com.zerobear.AuthService.utility;
 
 import com.zerobear.AuthService.exception.InvalidEmailException;
 import com.zerobear.AuthService.exception.InvalidPasswordException;
+import com.zerobear.AuthService.exception.InvalidUserNameException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,5 +52,16 @@ public class ValidationUtility {
         }else{
             throw new InvalidEmailException("Please Enter Valid Email");
         }
+    }
+
+    public boolean validateUserName(String name) {
+        if(name == null || name.isBlank()) {
+            throw new InvalidUserNameException("Please Enter Valid UserName ");
+        }
+        if (name.length()<5){
+            throw  new InvalidUserNameException("user-name should be at least 5 characters");
+        }
+
+        return name.length()>=5;
     }
 }

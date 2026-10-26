@@ -3,6 +3,7 @@ package com.zerobear.AuthService.controller;
 import com.zerobear.AuthService.dto.JwtTokenResponse;
 import com.zerobear.AuthService.dto.RegisterRequest;
 import com.zerobear.AuthService.entity.RefreshToken;
+import com.zerobear.AuthService.exception.EmailAlreadyRegisteredException;
 import com.zerobear.AuthService.exception.InvalidEmailException;
 import com.zerobear.AuthService.exception.InvalidPasswordException;
 import com.zerobear.AuthService.exception.UserAlreadyExistsException;
@@ -38,7 +39,7 @@ public class RegisterController {
             String jwtToken = jwtService.createToken(Map.of(),registerRequest.getName());
             JwtTokenResponse response = new JwtTokenResponse(jwtToken,refreshToken.getToken());
             return  new ResponseEntity<>(response,HttpStatus.CREATED);
-        }catch (UserAlreadyExistsException ex){
+        }catch (UserAlreadyExistsException | EmailAlreadyRegisteredException ex){
             return  new ResponseEntity<>("User Already Exists", HttpStatus.BAD_REQUEST);
         }catch (InvalidEmailException | InvalidPasswordException ex){
            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
