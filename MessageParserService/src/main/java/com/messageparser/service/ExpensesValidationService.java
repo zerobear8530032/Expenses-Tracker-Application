@@ -1,13 +1,12 @@
 package com.messageparser.service;
 
 import com.messageparser.dto.Expense;
-import com.messageparser.exception.InvalidExpenseException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
-public class ExpensesService {
+public class ExpensesValidationService {
     public boolean isValid(Expense expense) {
 
         if (expense == null) {
@@ -31,5 +30,7 @@ public class ExpensesService {
 
         return true;
     }
+
+
 
 }

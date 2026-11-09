@@ -16,4 +16,5 @@ public class Expense{
     private String merchant;
     private String currency;
     private BigDecimal amount;
+    private String createdBy="AI";
 }
