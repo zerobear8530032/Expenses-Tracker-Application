@@ -28,7 +28,7 @@ public class ExpenseService {
         if(messageValidationService.isValidBankMessage(message)){
             Expense expense= messageParserService.extractExpense(message);
             if(expensesValidationService.isValid(expense)){
-                expenseProducerService.produce("user-expense-event",expense);
+                publishEvent("user-expense-event",expense);
                 return expense;
             }else{
                 throw  new InvalidExpenseException("Expenses generated is invalid");
@@ -36,5 +36,9 @@ public class ExpenseService {
         }else{
             throw new InvalidMessageException("Message is valid ");
         }
+    }
+
+    public void publishEvent(String key,Expense expense) {
+       expenseProducerService.produce(key,expense);
     }
 }

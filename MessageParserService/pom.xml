@@ -45,19 +45,14 @@
             <artifactId>spring-boot-starter-webmvc</artifactId>
         </dependency>
 
-        <!-- Spring AI + Google Gemini -->
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.ai</groupId>-->
-<!--            <artifactId>spring-ai-starter-model-ollama</artifactId>-->
-<!--        </dependency>-->
 
-        <!-- Kafka (enable when required) -->
+
+        <!-- Kafka -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-kafka</artifactId>
         </dependency>
-
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -65,11 +60,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Spring AI + Google Gemini -->
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-model-google-genai</artifactId>
-        </dependency>
 
         <!-- General testing -->
         <dependency>
@@ -78,6 +68,11 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Spring AI + Google Gemini -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-model-google-genai</artifactId>
+        </dependency>
         <!-- MVC testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
