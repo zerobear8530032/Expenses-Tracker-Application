@@ -1,10 +1,7 @@
 package com.zerobear.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +9,8 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -19,6 +18,11 @@ import java.sql.Timestamp;
 @ToString
 @Data
 public class Expense {
+
+
+    @Column(nullable = false, unique = true)
+    String eventId;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +36,6 @@ public class Expense {
 
     private String currency;
 
-    private Timestamp createdAt;
+    private Instant createdAt;
 
 }

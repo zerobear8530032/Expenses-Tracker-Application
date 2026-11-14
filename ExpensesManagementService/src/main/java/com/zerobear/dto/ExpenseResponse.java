@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @ToString
@@ -18,6 +18,6 @@ public class ExpenseResponse {
     private BigDecimal amount;
     private String merchant;
     private String currency;
-    private Timestamp createdAt;
+    private Instant createdAt;
     private String createdBy;
 }

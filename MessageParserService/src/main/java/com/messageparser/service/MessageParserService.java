@@ -1,9 +1,8 @@
 package com.messageparser.service;
 
 import com.messageparser.dto.Expense;
-import com.messageparser.dto.MessageRequest;
+import com.messageparser.dto.ExpenseChatResponse;
 import com.messageparser.exception.InvalidExpenseException;
-import com.messageparser.exception.InvalidMessageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +10,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.ai.chat.client.ChatClient;
 
-import java.util.Arrays;
-import java.util.List;
+import java.time.Instant;
+import java.util.UUID;
 
 @Service
 public class MessageParserService {
@@ -31,12 +30,19 @@ public class MessageParserService {
 
 
     public Expense extractExpense(String message) {
-        Expense expense = chatClient.prompt()
+        ExpenseChatResponse expenseChatResponse = chatClient.prompt()
                 .system(prompt)
                 .user(message)
                 .call()
-                .entity(Expense.class);
-        if (expensesService.isValid(expense)) {
+                .entity(ExpenseChatResponse.class);
+        Expense expense= new Expense();
+        expense.setAmount(expenseChatResponse.getAmount());
+        expense.setMerchant(expense.getMerchant());
+        expense.setCurrency(expense.getCurrency());
+        expense.setEventId(UUID.randomUUID().toString());
+        expense.setCreatedBy("AI");
+        expense.setCreatedAt(Instant.now());
+        if (expensesService.isValidResponse(expense)) {
             return expense;
         }
         throw new InvalidExpenseException("Invalid Expenses generated");

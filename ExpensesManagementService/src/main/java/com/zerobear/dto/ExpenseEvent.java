@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExpenseEvent {
+    private String eventId;
     private BigDecimal amount;
     private String merchant;
     private String currency;

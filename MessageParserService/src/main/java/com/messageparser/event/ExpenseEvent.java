@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExpenseEvent {
+    private String eventId;
     private String merchant;
     private String currency;
     private BigDecimal amount;

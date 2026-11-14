@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Service
 public class ExpensesValidationService {
-    public boolean isValid(Expense expense) {
+    public boolean isValidResponse(Expense expense) {
 
         if (expense == null) {
             return false;

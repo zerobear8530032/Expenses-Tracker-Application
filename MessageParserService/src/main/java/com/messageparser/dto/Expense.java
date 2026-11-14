@@ -7,14 +7,17 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 
 @ToString
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Expense{
+    private String eventId;
     private String merchant;
     private String currency;
     private BigDecimal amount;
-    private String createdBy="AI";
+    private String createdBy;
+    private Instant createdAt;
 }

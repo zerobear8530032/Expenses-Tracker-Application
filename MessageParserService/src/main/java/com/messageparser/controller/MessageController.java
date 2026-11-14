@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @RestController
 public class MessageController {
@@ -28,12 +29,13 @@ public class MessageController {
 
     @PostMapping
     public Expense parseMessage(@RequestBody MessageRequest request){
-//        Expense expense=expenseService.parseAndPublishEvent(request);
+        Expense expense=expenseService.parseAndPublishEvent(request);
         Expense expense= new Expense();
         expense.setAmount(new BigDecimal(71));
-        expense.setCurrency("null");
+        expense.setCurrency("INR");
         expense.setMerchant("HDFC");
         expense.setCreatedBy("AI");
+        expense.setEventId(UUID.randomUUID().toString());
         expenseService.publishEvent("user-expense-event",expense);
         System.out.println(expense);
         return expense;

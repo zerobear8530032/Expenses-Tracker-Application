@@ -27,7 +27,7 @@ public class ExpenseService {
         String message= messageRequest.getMessage();
         if(messageValidationService.isValidBankMessage(message)){
             Expense expense= messageParserService.extractExpense(message);
-            if(expensesValidationService.isValid(expense)){
+            if(expensesValidationService.isValidResponse(expense)){
                 publishEvent("user-expense-event",expense);
                 return expense;
             }else{

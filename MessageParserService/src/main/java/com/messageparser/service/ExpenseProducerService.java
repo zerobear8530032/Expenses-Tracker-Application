@@ -28,6 +28,7 @@ public class ExpenseProducerService {
         expenseEvent.setMerchant(expense.getMerchant());
         expenseEvent.setCurrency(expense.getCurrency());
         expenseEvent.setCreatedBy(expense.getCreatedBy());
+        expenseEvent.setEventId(expense.getEventId());
         Message<ExpenseEvent> message = MessageBuilder
                 .withPayload(expenseEvent)
                 .setHeader("event-type", "user-add-expense-event")
