@@ -29,7 +29,7 @@ public class MessageParserService {
 
 
 
-    public Expense extractExpense(String message) {
+    public Expense extractExpense(String userId,String message) {
         ExpenseChatResponse expenseChatResponse = chatClient.prompt()
                 .system(prompt)
                 .user(message)
@@ -40,6 +40,7 @@ public class MessageParserService {
         expense.setMerchant(expense.getMerchant());
         expense.setCurrency(expense.getCurrency());
         expense.setEventId(UUID.randomUUID().toString());
+        expense.setUserId(userId);
         expense.setCreatedBy("AI");
         expense.setCreatedAt(Instant.now());
         if (expensesService.isValidResponse(expense)) {

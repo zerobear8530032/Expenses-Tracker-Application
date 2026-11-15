@@ -12,7 +12,9 @@ public class ExpensesValidationService {
         if (expense == null) {
             return false;
         }
-
+        if(expense.getUserId()==null){
+            return false;
+        }
         if (expense.getMerchant() == null ||
                 expense.getMerchant().isBlank()) {
             return false;

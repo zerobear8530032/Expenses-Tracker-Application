@@ -16,6 +16,7 @@ import java.time.Instant;
 public class Expense{
     private String eventId;
     private String merchant;
+    private String userId;
     private String currency;
     private BigDecimal amount;
     private String createdBy;

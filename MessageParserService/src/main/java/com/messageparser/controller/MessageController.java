@@ -29,15 +29,8 @@ public class MessageController {
 
     @PostMapping
     public Expense parseMessage(@RequestBody MessageRequest request){
-        Expense expense=expenseService.parseAndPublishEvent(request);
-        Expense expense= new Expense();
-        expense.setAmount(new BigDecimal(71));
-        expense.setCurrency("INR");
-        expense.setMerchant("HDFC");
-        expense.setCreatedBy("AI");
-        expense.setEventId(UUID.randomUUID().toString());
-        expenseService.publishEvent("user-expense-event",expense);
-        System.out.println(expense);
+        Expense expense=expenseService.parseAndPublishEvent("User-123",request);
+
         return expense;
     }
 }

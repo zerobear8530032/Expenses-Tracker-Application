@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ExpenseEvent {
     private String eventId;
+    private String userId;
     private String merchant;
     private String currency;
     private BigDecimal amount;
