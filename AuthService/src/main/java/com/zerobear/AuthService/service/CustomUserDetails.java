@@ -18,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
     String id;
     String name;
     String password;
+    String email;
     Set<Role> role= new HashSet<>();
 
     @Override

@@ -50,7 +50,7 @@ public class RegisterService {
             throw new UserAlreadyExistsException("User with username : " + userRegisterRequest.getName() + " already exists");
         }
         String id = UUID.randomUUID().toString();
-        User user=  new User(id,userRegisterRequest.getName(),hashedPassword,new HashSet<>());
+        User user=  new User(id,userRegisterRequest.getName(),userRegisterRequest.getEmail(),hashedPassword,new HashSet<>());
         User newUser=userRepository.save(user);
         UserRegisterEvent userRegisterEvent= new UserRegisterEvent(id,userRegisterRequest.getName(), userRegisterRequest.getPhoneNumber(), userRegisterRequest.getEmail());
         userEventProducerService.produceUserRegisterEvent("user-register",userRegisterEvent);

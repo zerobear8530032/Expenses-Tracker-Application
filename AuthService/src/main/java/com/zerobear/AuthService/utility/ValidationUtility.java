@@ -12,8 +12,10 @@ public class ValidationUtility {
         if(password==null || password.isBlank()){
             throw new InvalidPasswordException("Password length should be at least 8 ");
         }
-        if(password.length()>24){
-            throw new InvalidPasswordException("Password length should not exceed 24 characters ");
+        if (password.length() < 8 || password.length() > 24) {
+            throw new InvalidPasswordException(
+                    "Password length must be between 8 and 24 characters"
+            );
         }
         boolean specialSymbol= false;
         boolean numbers= false;
@@ -28,10 +30,8 @@ public class ValidationUtility {
                 capitalLetters = true;
             }else if(ch>='0' && ch<='9'){
                 numbers=true;
-            }if(ch>='a' && ch<='z'){
-                smallLetters=true;
-            }else {
-                specialSymbol=true;
+            }else if (!Character.isWhitespace(ch)) {
+                specialSymbol = true;
             }
         }
         boolean valid=specialSymbol && numbers && capitalLetters && smallLetters;
@@ -57,9 +57,6 @@ public class ValidationUtility {
     public boolean validateUserName(String name) {
         if(name == null || name.isBlank()) {
             throw new InvalidUserNameException("Please Enter Valid UserName ");
-        }
-        if (name.length()<5){
-            throw  new InvalidUserNameException("user-name should be at least 5 characters");
         }
 
         return name.length()>=5;
