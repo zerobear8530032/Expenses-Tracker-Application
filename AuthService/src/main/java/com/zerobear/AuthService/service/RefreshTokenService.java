@@ -24,7 +24,7 @@ public class RefreshTokenService {
 
 
     public RefreshToken createToken(String username) {
-        User user = userRepository.findByName(username).orElseThrow(()-> new UsernameNotFoundException("User name "+username+"  not found in database"));
+        User user = userRepository.findByUserName(username).orElseThrow(()-> new UsernameNotFoundException("User name "+username+"  not found in database"));
         RefreshToken refreshToken= tokenRepository.findByUser(user).orElseGet(RefreshToken::new);
         refreshToken.setUser(user);
         refreshToken.setExpiryDate(new Date().toInstant().plusMillis(600000));

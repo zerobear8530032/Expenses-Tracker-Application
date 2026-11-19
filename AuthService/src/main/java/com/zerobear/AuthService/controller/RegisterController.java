@@ -35,8 +35,8 @@ public class RegisterController {
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
         try{
             boolean signUpUser = registerService.register(registerRequest);
-            RefreshToken refreshToken = refreshTokenService.createToken(registerRequest.getName());
-            String jwtToken = jwtService.createToken(Map.of(),registerRequest.getName());
+            RefreshToken refreshToken = refreshTokenService.createToken(registerRequest.getUserName());
+            String jwtToken = jwtService.createToken(Map.of(),registerRequest.getUserName());
             JwtTokenResponse response = new JwtTokenResponse(jwtToken,refreshToken.getToken());
             return  new ResponseEntity<>(response,HttpStatus.CREATED);
         }catch (UserAlreadyExistsException | EmailAlreadyRegisteredException ex){
@@ -44,7 +44,7 @@ public class RegisterController {
         }catch (InvalidEmailException | InvalidPasswordException ex){
            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }catch (Exception ex){
-            return  new ResponseEntity<>("Some Error occurr",HttpStatus.INTERNAL_SERVER_ERROR);
+            return  new ResponseEntity<>(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

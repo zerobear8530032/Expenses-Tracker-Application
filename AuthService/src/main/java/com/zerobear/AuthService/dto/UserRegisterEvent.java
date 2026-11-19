@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class UserRegisterEvent {
     String userId;
     String name;
-    long phoneNumber;
     String email;
 }

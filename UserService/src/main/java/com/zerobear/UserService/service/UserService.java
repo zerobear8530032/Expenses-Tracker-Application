@@ -45,7 +45,6 @@ public class UserService {
         User user= new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPhoneNumber(userRegisterEvent.getPhoneNumber());
         user.setUserId(userRegisterEvent.getUserId());
         User savedUser=userRepository.save(user);
         UserResponse userResponse= mapUserToUserResponse(savedUser);
@@ -68,7 +67,6 @@ public class UserService {
         }
         user.setName(updateUserRequest.getName());
         user.setEmail(updateUserRequest.getEmail());
-        user.setPhoneNumber(updateUserRequest.getPhoneNumber());
 
         User updatedUser=userRepository.save(user);
         return mapUserToUserResponse(updatedUser);
@@ -79,7 +77,6 @@ public class UserService {
         userResponse.setId(user.getId());
         userResponse.setUserId(user.getUserId());
         userResponse.setName(user.getName());
-        userResponse.setPhoneNumber(user.getPhoneNumber());
         userResponse.setEmail(user.getEmail());
         return  userResponse;
     }

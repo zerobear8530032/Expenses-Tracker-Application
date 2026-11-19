@@ -58,6 +58,9 @@ public class ValidationUtility {
         if(name == null || name.isBlank()) {
             throw new InvalidUserNameException("Please Enter Valid UserName ");
         }
+        if (name.length() < 5 || name.length()>25) {
+            throw new InvalidUserNameException("User name should be in between 5 to 25 characters");
+        }
 
         return name.length()>=5;
     }

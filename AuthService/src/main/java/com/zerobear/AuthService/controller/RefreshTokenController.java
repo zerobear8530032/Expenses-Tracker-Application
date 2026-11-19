@@ -27,7 +27,7 @@ public class RefreshTokenController {
         RefreshToken refreshToken= refreshTokenService.findByToken(tokenRequest.getRefreshToken()).orElseThrow(()-> new RefrehTokenNotFoundException("Token not present in the database"));
         refreshTokenService.isExpired(refreshToken);
         User user= refreshToken.getUser();
-        String jwt = jwtService.createToken(user.getName());
+        String jwt = jwtService.createToken(user.getUserName());
         JwtTokenResponse response= new JwtTokenResponse(jwt,refreshToken.getToken());
         return response;
     }
