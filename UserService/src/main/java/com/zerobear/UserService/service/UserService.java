@@ -9,10 +9,13 @@ import com.zerobear.UserService.exception.UserAlreadyExistsException;
 import com.zerobear.UserService.exception.UserNotFoundException;
 import com.zerobear.UserService.repository.UserRepository;
 import com.zerobear.UserService.utility.ValidationUtility;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -24,12 +27,18 @@ public class UserService {
         this.validationUtility = validationUtility;
     }
 
-    public UserResponse getUser(Long id){
+    public UserResponse getUser(String id){
         User user= userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User Id "+id+" Does not exists "));
         UserResponse response = mapUserToUserResponse(user);
         return  response;
     }
-    public UserResponse createUser(UserRegisterEvent userRegisterEvent) {
+    @Transactional
+    public void createUser(UserRegisterEvent userRegisterEvent) {
+
+        if (userRepository.existsByEventId(userRegisterEvent.getEventId())) {
+            log.info("Duplicate event received: {}", userRegisterEvent.getEventId());
+            return;
+        }
         String name = userRegisterEvent.getName();
         String email = userRegisterEvent.getEmail();
 
@@ -45,23 +54,23 @@ public class UserService {
         User user= new User();
         user.setName(name);
         user.setEmail(email);
+        user.setEventId(userRegisterEvent.getEventId());
         user.setUserId(userRegisterEvent.getUserId());
         User savedUser=userRepository.save(user);
-        UserResponse userResponse= mapUserToUserResponse(savedUser);
-        return userResponse;
+
     }
     public UserResponse updateUser(UpdateUserRequest updateUserRequest) {
         String name = updateUserRequest.getName();
         String email = updateUserRequest.getEmail();
-        Long id = updateUserRequest.getId();
+        String id = updateUserRequest.getId();
         validationUtility.validateEmail(email);
         validationUtility.validateUserName(name);
         User user = userRepository.findById(id).orElseThrow(()-> new UserNotFoundException("User Id "+id+" ooes not exists"));
-        if (userRepository.existsByEmailAndIdNot(
+        if (userRepository.existsByEmailAndUserIdNot(
                 email, id)) {
             throw new EmailAlreadyRegisteredException("Email already registered");
         }
-        if (userRepository.existsByNameAndIdNot(
+        if (userRepository.existsByNameAndUserIdNot(
                 name, id)) {
             throw new UserAlreadyExistsException("Username already exists");
         }
@@ -74,7 +83,6 @@ public class UserService {
 
     private UserResponse mapUserToUserResponse(User user){
         UserResponse userResponse= new UserResponse();
-        userResponse.setId(user.getId());
         userResponse.setUserId(user.getUserId());
         userResponse.setName(user.getName());
         userResponse.setEmail(user.getEmail());

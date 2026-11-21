@@ -4,9 +4,12 @@ import com.zerobear.AuthService.dto.UserRegisterEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UserEventProducerService {
@@ -18,17 +21,16 @@ public class UserEventProducerService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void produceUserRegisterEvent(
-            String key,
+    public CompletableFuture<SendResult<String, UserRegisterEvent>> produceUserRegisterEvent(
             UserRegisterEvent userRegisterEvent) {
 
         Message<UserRegisterEvent> message = MessageBuilder
                 .withPayload(userRegisterEvent)
                 .setHeader("event-type", "user-register-event")
                 .setHeader(KafkaHeaders.TOPIC, topic)
-                .setHeader(KafkaHeaders.KEY, key)
+                .setHeader(KafkaHeaders.KEY, userRegisterEvent.getUserId())
                 .build();
 
-        kafkaTemplate.send(message);
+        return kafkaTemplate.send(message);
     }
 }

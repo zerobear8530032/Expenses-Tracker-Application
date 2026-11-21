@@ -38,7 +38,7 @@ public class RegisterController {
             RefreshToken refreshToken = refreshTokenService.createToken(registerRequest.getUserName());
             String jwtToken = jwtService.createToken(Map.of(),registerRequest.getUserName());
             JwtTokenResponse response = new JwtTokenResponse(jwtToken,refreshToken.getToken());
-            return  new ResponseEntity<>(response,HttpStatus.CREATED);
+            return  new ResponseEntity<>(response,HttpStatus.ACCEPTED);
         }catch (UserAlreadyExistsException | EmailAlreadyRegisteredException ex){
             return  new ResponseEntity<>("User Already Exists", HttpStatus.BAD_REQUEST);
         }catch (InvalidEmailException | InvalidPasswordException ex){

@@ -23,7 +23,7 @@ public class DataInitializer {
 
             if (!roleRepository.existsByRole("USER")) {
                 Role user = new Role();
-                user.setRole("ADMIN");
+                user.setRole("USER");
                 roleRepository.save(user);
             }
 

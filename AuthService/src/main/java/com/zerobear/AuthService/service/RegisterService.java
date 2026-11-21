@@ -5,6 +5,7 @@ import com.zerobear.AuthService.dto.UserRegisterEvent;
 import com.zerobear.AuthService.entity.Role;
 import com.zerobear.AuthService.entity.User;
 import com.zerobear.AuthService.entity.UserOutBox;
+import com.zerobear.AuthService.enums.AccountStatus;
 import com.zerobear.AuthService.enums.UserOutBoxStatus;
 import com.zerobear.AuthService.exception.EmailAlreadyRegisteredException;
 import com.zerobear.AuthService.exception.UserAlreadyExistsException;
@@ -72,11 +73,11 @@ public class RegisterService {
 
         Set<Role> roles = new HashSet<>();
         roles.add(role);
-        User user=  new User(id,userRegisterRequest.getUserName(),userRegisterRequest.getEmail(),hashedPassword,roles);
+        User user=  new User(id,userRegisterRequest.getUserName(),userRegisterRequest.getEmail(),hashedPassword,roles, AccountStatus.PENDING);
         User createdUser=userRepository.save(user);
         UserOutBox userOutBox= new UserOutBox();
-
-        UserRegisterEvent userRegisterEvent= new UserRegisterEvent(id,userRegisterRequest.getUserName(), userRegisterRequest.getEmail());
+        String eventId= generateUUID();
+        UserRegisterEvent userRegisterEvent= new UserRegisterEvent("eventId",id,userRegisterRequest.getUserName(), userRegisterRequest.getEmail());
         String json = toJson(userRegisterEvent);
         userOutBox.setCreatedAt(Instant.now());
         userOutBox.setStatus(UserOutBoxStatus.PENDING);
@@ -89,8 +90,9 @@ public class RegisterService {
     private String toJson(UserRegisterEvent userRegisterEvent){
         return objectMapper.writeValueAsString(userRegisterEvent);
     }
-
-
+    private String generateUUID(){
+        return UUID.randomUUID().toString();
+    }
 
 
 

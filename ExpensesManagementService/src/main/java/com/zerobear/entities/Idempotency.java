@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(
+@Table(name = "expenses_processes",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_user_idempotency_key",

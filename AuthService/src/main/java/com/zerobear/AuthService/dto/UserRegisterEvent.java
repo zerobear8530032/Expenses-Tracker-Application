@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class UserRegisterEvent {
+    String eventId;
     String userId;
     String name;
     String email;

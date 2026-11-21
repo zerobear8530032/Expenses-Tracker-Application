@@ -1,9 +1,11 @@
 package com.zerobear.UserService.service;
 
 import com.zerobear.UserService.dto.UserRegisterEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UserConsumerService {
 
@@ -19,9 +21,9 @@ public class UserConsumerService {
         try {
             userService.createUser(userRegisterEvent);
         } catch (Exception e) {
-            System.out.println("Exception occurred "+e);
-            System.out.println("Message : "+e.getMessage());
+            log.error("Exception occurred",e);
 
+            throw e;
         }
     }
 }
