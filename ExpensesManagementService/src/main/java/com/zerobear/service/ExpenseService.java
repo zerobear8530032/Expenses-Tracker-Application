@@ -81,7 +81,7 @@ public class ExpenseService {
 
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ExpenseResponse addExpense(ExpenseRequest expenseRequest,String key) throws NoSuchAlgorithmException{
         Optional<Idempotency> optionalIdempotency=idempotencyRepository.findByUserIdAndIdempotencyKey(expenseRequest.getUserId(),key);
         String hashRequest= hashRequest(expenseRequest);

@@ -2,37 +2,31 @@ package com.zerobear.AuthService.entity;
 
 import com.zerobear.AuthService.enums.IdempotencyStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "user_profile_processes",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_user_idempotency_key",
-                        columnNames = {"user_id", "idempotency_key"}
-                )
-        }
+@Table(name = "auth_idempotency"
 )
 public class Idempotency {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+    @Column(unique = true,nullable = false)
     String idempotencyKey;
-    String userId;
+    @Column(nullable = false)
     String requestHash;
-    @Column(columnDefinition = "JSON")
-    String requestBody;
+
     String responseBody;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     IdempotencyStatus status;
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     HttpStatus httpStatus;
 }

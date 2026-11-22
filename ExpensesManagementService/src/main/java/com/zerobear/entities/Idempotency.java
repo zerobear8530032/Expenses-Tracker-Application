@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 )
 public class Idempotency {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String idempotencyKey;
     String userId;

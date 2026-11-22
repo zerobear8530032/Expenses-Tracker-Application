@@ -4,9 +4,13 @@ import com.zerobear.UserService.dto.UpdateUserRequest;
 import com.zerobear.UserService.dto.UserRegisterEvent;
 import com.zerobear.UserService.dto.UserResponse;
 import com.zerobear.UserService.entity.User;
+import com.zerobear.UserService.entity.UserOutBoxEvents;
+import com.zerobear.UserService.enums.EventOutBoxStatus;
+import com.zerobear.UserService.enums.RegistrationStatus;
 import com.zerobear.UserService.exception.EmailAlreadyRegisteredException;
 import com.zerobear.UserService.exception.UserAlreadyExistsException;
 import com.zerobear.UserService.exception.UserNotFoundException;
+import com.zerobear.UserService.repository.UserOutBoxEventsRepository;
 import com.zerobear.UserService.repository.UserRepository;
 import com.zerobear.UserService.utility.ValidationUtility;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -21,10 +26,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final ValidationUtility validationUtility;
-
-    public UserService(UserRepository userRepository, ValidationUtility validationUtility) {
+    private final UserOutBoxEventsRepository userEventsRepository;
+    public UserService(UserRepository userRepository, ValidationUtility validationUtility, UserOutBoxEventsRepository userEventsRepository) {
         this.userRepository = userRepository;
         this.validationUtility = validationUtility;
+        this.userEventsRepository = userEventsRepository;
     }
 
     public UserResponse getUser(String id){
@@ -41,14 +47,19 @@ public class UserService {
         }
         String name = userRegisterEvent.getName();
         String email = userRegisterEvent.getEmail();
+        String eventId = generateUUID();
 
-        Optional<User> optionalUserName = userRepository.findByName(name);
-        if(optionalUserName.isPresent()){
-            throw new UserAlreadyExistsException("User Name : "+name+" Already register");
+        if(userRepository.existsByName(name)){
+//            throw new UserAlreadyExistsException("User Name : "+name+" Already register");
+            UserOutBoxEvents userEvent = new UserOutBoxEvents(eventId, userRegisterEvent.getEventId(), userRegisterEvent.getUserId(), RegistrationStatus.FAILED,"UserName "+name+" Already registed !", EventOutBoxStatus.PENDING);
+            userEventsRepository.save(userEvent);
+            return;
         }
-        Optional<User> optionalUserEmail = userRepository.findByEmail(email);
-        if(optionalUserEmail.isPresent()){
-            throw new EmailAlreadyRegisteredException("Email : "+email+" Already register");
+        if(userRepository.existsByEmail(email)){
+//            throw new EmailAlreadyRegisteredException("Email : "+email+" Already register");
+            UserOutBoxEvents userEvent = new UserOutBoxEvents(eventId, userRegisterEvent.getEventId(), userRegisterEvent.getUserId(), RegistrationStatus.FAILED,"Email "+email+" Already registed !",EventOutBoxStatus.PENDING);
+            userEventsRepository.save(userEvent);
+            return;
         }
 
         User user= new User();
@@ -56,9 +67,13 @@ public class UserService {
         user.setEmail(email);
         user.setEventId(userRegisterEvent.getEventId());
         user.setUserId(userRegisterEvent.getUserId());
-        User savedUser=userRepository.save(user);
+        User createdUser =userRepository.saveAndFlush(user);
+        UserOutBoxEvents userEvent = new UserOutBoxEvents(eventId, createdUser.getEventId(), createdUser.getUserId(), RegistrationStatus.SUCCESS,null,EventOutBoxStatus.PENDING);
+        userEventsRepository.save(userEvent);
 
     }
+
+
     public UserResponse updateUser(UpdateUserRequest updateUserRequest) {
         String name = updateUserRequest.getName();
         String email = updateUserRequest.getEmail();
@@ -81,6 +96,9 @@ public class UserService {
         return mapUserToUserResponse(updatedUser);
     }
 
+    private String generateUUID(){
+        return UUID.randomUUID().toString();
+    }
     private UserResponse mapUserToUserResponse(User user){
         UserResponse userResponse= new UserResponse();
         userResponse.setUserId(user.getUserId());

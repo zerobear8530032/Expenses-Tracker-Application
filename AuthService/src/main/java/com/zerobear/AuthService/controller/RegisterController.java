@@ -2,6 +2,7 @@ package com.zerobear.AuthService.controller;
 
 import com.zerobear.AuthService.dto.JwtTokenResponse;
 import com.zerobear.AuthService.dto.RegisterRequest;
+import com.zerobear.AuthService.dto.RegisterUserResponse;
 import com.zerobear.AuthService.entity.RefreshToken;
 import com.zerobear.AuthService.exception.EmailAlreadyRegisteredException;
 import com.zerobear.AuthService.exception.InvalidEmailException;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -32,9 +34,10 @@ public class RegisterController {
     }
 
     @PostMapping("/auth/v1/register")
-    public ResponseEntity register(@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity register(@RequestHeader("Idempotency-Key") String idempotencyKey ,@RequestBody RegisterRequest registerRequest){
         try{
-            boolean signUpUser = registerService.register(registerRequest);
+
+            RegisterUserResponse signUpUser = registerService.register(idempotencyKey,registerRequest);
             RefreshToken refreshToken = refreshTokenService.createToken(registerRequest.getUserName());
             String jwtToken = jwtService.createToken(Map.of(),registerRequest.getUserName());
             JwtTokenResponse response = new JwtTokenResponse(jwtToken,refreshToken.getToken());
