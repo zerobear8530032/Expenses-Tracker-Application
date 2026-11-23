@@ -28,4 +28,5 @@ public class User {
     private Set<Role> roles = new HashSet<>();
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
+
 }

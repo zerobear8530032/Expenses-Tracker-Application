@@ -1,4 +1,4 @@
-package com.zerobear.UserService.exceptions;
+package com.zerobear.UserService.exception;
 
 public class EventNotFoundException extends RuntimeException{
     public EventNotFoundException() {

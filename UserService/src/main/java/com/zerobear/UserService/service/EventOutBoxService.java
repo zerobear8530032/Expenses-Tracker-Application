@@ -2,7 +2,7 @@ package com.zerobear.UserService.service;
 
 import com.zerobear.UserService.entity.UserOutBoxEvents;
 import com.zerobear.UserService.enums.EventOutBoxStatus;
-import com.zerobear.UserService.exceptions.EventNotFoundException;
+import com.zerobear.UserService.exception.EventNotFoundException;
 import com.zerobear.UserService.repository.UserOutBoxEventsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
