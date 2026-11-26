@@ -15,11 +15,10 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomUserDetails implements UserDetails {
-    String id;
-    String name;
-    String password;
-    String email;
-    Set<Role> role= new HashSet<>();
+    private String userId;
+    private String name;
+    private String password;
+    private Set<Role> role= new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

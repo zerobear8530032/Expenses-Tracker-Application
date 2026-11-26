@@ -52,9 +52,7 @@ public class RegisterService {
     public Optional<User> getUserIfExists(RegisterRequest userRegisterRequest) throws UserNotFoundException{
         return  userRepository.findByUserName(userRegisterRequest.getUserName());
     }
-    public Optional<User> findUserByEmailIfExists(RegisterRequest userRegisterRequest) throws UserNotFoundException{
-        return  userRepository.findByEmail(userRegisterRequest.getEmail());
-    }
+
     @Transactional(rollbackFor = Exception.class)
     public RegisterUserResponse register(String idempotentKey,RegisterRequest userRegisterRequest) throws UserNotFoundException, NoSuchAlgorithmException {
         Optional<Idempotency> optionalIdempotency=idempotencyRepository.findByIdempotencyKey(idempotentKey);
@@ -81,14 +79,9 @@ public class RegisterService {
         Idempotency savedIdempotency=idempotencyRepository.saveAndFlush(idempotency);
 
         validationUtility.validatePassword(userRegisterRequest.getPassword());
-        validationUtility.validateEmail(userRegisterRequest.getEmail());
         validationUtility.validateUserName(userRegisterRequest.getUserName());
 
         Optional<User> optionalUser= getUserIfExists(userRegisterRequest);
-        Optional<User> optionalUserEmail = findUserByEmailIfExists(userRegisterRequest);
-        if(optionalUserEmail.isPresent()){
-            throw new EmailAlreadyRegisteredException("User Email "+userRegisterRequest.getEmail()+" Already Registed .");
-        }
         if(optionalUser.isPresent()) {
             throw new UserAlreadyExistsException("User with username : " + userRegisterRequest.getUserName() + " already exists");
         }
@@ -101,9 +94,9 @@ public class RegisterService {
 
         Set<Role> roles = new HashSet<>();
         roles.add(role);
-        User user=  new User(id,userRegisterRequest.getUserName(),userRegisterRequest.getEmail(),hashedPassword,roles, AccountStatus.PENDING);
+        User user=  new User(id,userRegisterRequest.getUserName(),hashedPassword,roles, AccountStatus.PENDING);
         User createdUser=userRepository.save(user);
-        RegisterUserResponse userResponse= new RegisterUserResponse(createdUser.getId(),createdUser.getUserName(),createdUser.getEmail());
+        RegisterUserResponse userResponse= new RegisterUserResponse(createdUser.getId(),createdUser.getUserName());
         UserOutBox userOutBox= new UserOutBox();
         String eventId= generateUUID();
         UserRegisterEvent userRegisterEvent= new UserRegisterEvent(eventId,id,userRegisterRequest.getUserName(), userRegisterRequest.getEmail());

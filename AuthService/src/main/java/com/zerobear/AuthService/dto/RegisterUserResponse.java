@@ -18,5 +18,5 @@ import java.time.Instant;
 public class RegisterUserResponse {
     private String userId;
     private String userName;
-    private String email;
+
 }
